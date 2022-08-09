@@ -5,6 +5,13 @@ from rest_framework import permissions, viewsets
 from .permissions import IsAuthorOrReadOnlyPermission
 from .serializers import CommentSerializer, GroupSerializer, PostSerializer, FollowSerializer
 
+from rest_framework import mixins
+
+
+class CreateRetrieveViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin,
+                            viewsets.GenericViewSet):
+    pass 
+
 
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all()
@@ -44,6 +51,6 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user, post=post)
 
 
-class FollowViewSet(viewsets.ModelViewSet):
+class FollowViewSet(CreateRetrieveViewSet):
     serializer_class = FollowSerializer
     permission_classes = (permissions.IsAuthenticated,)
