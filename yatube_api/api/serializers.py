@@ -36,6 +36,7 @@ class FollowSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='username',
         default=serializers.CurrentUserDefault(),
+#        queryset = User.objects.all(),
     )
 
     following = serializers.SlugRelatedField(
@@ -65,5 +66,5 @@ class FollowSerializer(serializers.ModelSerializer):
 #            raise serializers.ValidationError(
 #                'Нельзя подписаться на самого себя!')
         print('self=', self.context.get('request').user)
-        print('data=', data['following'])
+#        print('data=', data['following'])
         return data 
