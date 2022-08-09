@@ -33,26 +33,30 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class FollowSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(
-        read_only=True, slug_field='username'
+        read_only=True,
+        slug_field='username',
+        default=serializers.CurrentUserDefault(),
     )
 
     following = serializers.SlugRelatedField(
-        slug_field='username', queryset = User.objects.all(),
+        slug_field='username',
+        default=serializers.CurrentUserDefault(),
+        queryset = User.objects.all(),
     )
 
 
     class Meta:
         fields = '__all__'
         model = Follow
-
         validators = [
             UniqueTogetherValidator(
                 queryset=Follow.objects.all(),
-                fields=('user', 'following')
-            )
+                fields=('user', 'following'),
+                message=('Разрешена только однократная подписка на автора!'),
+            ),
         ]
 
-    def validate(self, data):
+    def validate_following(self, data):
 #        if data['color'] == data['name']:
 #            raise serializers.ValidationError(
 #                'Нельзя подписаться на самого себя!')
