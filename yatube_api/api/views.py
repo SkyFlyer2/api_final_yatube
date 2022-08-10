@@ -8,13 +8,6 @@ from .permissions import IsAuthorOrReadOnlyPermission
 from .serializers import CommentSerializer, GroupSerializer, PostSerializer
 from .serializers import FollowSerializer
 
-#from rest_framework import mixins
-
-
-#class CreateRetrieveViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin,
-#                            viewsets.GenericViewSet):
-#    pass
-
 
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all()
@@ -25,7 +18,6 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     permission_classes = (
         IsAuthorOrReadOnlyPermission,
-    #    permissions.IsAuthenticated,
     )
     pagination_class = LimitOffsetPagination
 
@@ -43,7 +35,6 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     permission_classes = (
         IsAuthorOrReadOnlyPermission,
-    #    permissions.IsAuthenticated,
     )
 
     def get_queryset(self):

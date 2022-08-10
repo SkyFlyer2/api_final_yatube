@@ -38,7 +38,6 @@ class FollowSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='username',
         default=serializers.CurrentUserDefault(),
-#        queryset = User.objects.all(),
     )
 
     following = serializers.SlugRelatedField(
