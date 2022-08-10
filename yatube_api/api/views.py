@@ -5,14 +5,15 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import filters
 
 from .permissions import IsAuthorOrReadOnlyPermission
-from .serializers import CommentSerializer, GroupSerializer, PostSerializer, FollowSerializer
+from .serializers import CommentSerializer, GroupSerializer, PostSerializer
+from .serializers import FollowSerializer
 
-from rest_framework import mixins
+#from rest_framework import mixins
 
 
 #class CreateRetrieveViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin,
 #                            viewsets.GenericViewSet):
-#    pass 
+#    pass
 
 
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):

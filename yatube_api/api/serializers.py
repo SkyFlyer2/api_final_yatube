@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from posts.models import Comment, Group, Post, Follow
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
@@ -6,6 +7,7 @@ from rest_framework.validators import UniqueTogetherValidator
 
 
 User = get_user_model()
+
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -42,9 +44,8 @@ class FollowSerializer(serializers.ModelSerializer):
     following = serializers.SlugRelatedField(
         slug_field='username',
         default=serializers.CurrentUserDefault(),
-        queryset = User.objects.all(),
+        queryset=User.objects.all(),
     )
-
 
     class Meta:
         fields = '__all__'
@@ -58,13 +59,9 @@ class FollowSerializer(serializers.ModelSerializer):
         ]
 
     def validate_following(self, data):
-#        if self.context['request'].user == data['following']:
-#            raise serializers.ValidationError(
-#                'Подписка на самого себя запрещена')
-#        return data
-#        if data['color'] == data['name']:
-#            raise serializers.ValidationError(
-#                'Нельзя подписаться на самого себя!')
-        print('self=', self.context.get('request').user)
-#        print('data=', data['following'])
-        return data 
+        author = get_object_or_404(User, username=data)
+        if author != self.context.get('request').user:
+            return data
+        raise serializers.ValidationError(
+            'Нельзя подписаться на самого себя!'
+        )
