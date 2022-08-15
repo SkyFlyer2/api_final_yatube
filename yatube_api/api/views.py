@@ -7,26 +7,22 @@ from .permissions import IsAuthorOrReadOnlyPermission
 from .serializers import (CommentSerializer, FollowSerializer, GroupSerializer,
                           PostSerializer)
 
-from rest_framework import mixins
-
 
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+    permission_classes = (
+        IsAuthorOrReadOnlyPermission,
+    )
 
 
 class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.select_related('author', 'group')
     serializer_class = PostSerializer
     permission_classes = (
         IsAuthorOrReadOnlyPermission,
     )
     pagination_class = LimitOffsetPagination
-
-    def get_queryset(self):
-        post_id = self.kwargs.get('pk')
-        if post_id is not None:
-            return Post.objects.filter(id=post_id)
-        return Post.objects.select_related('author', 'group')
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
